@@ -49,6 +49,7 @@ public class Start extends HttpServlet {
 				+ "\nContext: " + request.getContextPath()
 				+ "\nServlet: " + request.getServletPath()
 				+ "\nPath: " + request.getPathInfo()
+				+ "\nContext Parameter Test: " + getServletContext().getInitParameter("appName")
 				);
 	}
 
