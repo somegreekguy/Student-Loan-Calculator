@@ -1,6 +1,7 @@
 package servlets;
 
 import java.io.IOException;
+import java.io.Writer;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -26,7 +27,25 @@ public class Start extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("Hello World.");
+		response.setContentType("text/plain");
+		Writer resOut = response.getWriter();
+
+		String IPAddress = request.getRemoteAddr();
+		String protocol = request.getProtocol();
+		String method = request.getMethod();
+		String query = request.getQueryString();
+		int port = request.getRemotePort();
+		resOut.write("IP Address: " + IPAddress
+				+ "\nPort: " + port
+				+ "\nProtocol: " + protocol
+				+ "\nMethod: " + method
+				+ "\nQuery String: " + query
+				+ "\nParameter: " + request.getParameter("Test")
+				+ "\nURI: " + request.getRequestURI()
+				+ "\nContext: " + request.getContextPath()
+				+ "\nServlet: " + request.getServletPath()
+				+ "\nPath: " + request.getPathInfo()
+				);
 	}
 
 	/**
