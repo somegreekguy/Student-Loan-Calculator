@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class Start
  */
-@WebServlet({"/Start"})
+@WebServlet({"/Start","/Startup/*"})
 public class Start extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -27,6 +27,10 @@ public class Start extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		if (request.getServletPath().equals("/Startup") && request.getPathInfo().equals("/Yorkbank")) {
+			response.sendRedirect(request.getContextPath() + "/Start");
+		}
+
 		response.setContentType("text/plain");
 		Writer resOut = response.getWriter();
 
