@@ -2,6 +2,7 @@ package servlets;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.text.DecimalFormat;
 import java.util.Enumeration;
 
 import javax.servlet.ServletContext;
@@ -29,45 +30,48 @@ public class Start extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if (request.getServletPath().equals("/Startup") && request.getPathInfo().equals("/Yorkbank")) {
-			response.sendRedirect(request.getContextPath() + "/Start");
+		if (request.getParameter("submit") == null) {
+				request.getRequestDispatcher("/UI.jspx").forward(request, response);
+				return;
 		}
-
-		response.setContentType("text/plain");
-		Writer resOut = response.getWriter();
 
 		// Get Servlet Context that contains parameters
 		ServletContext context = getServletContext();
 
 		double principal = Double.parseDouble(context.getInitParameter("principal"));
 		double interest = Double.parseDouble(context.getInitParameter("interest"));
+		double fixedInterest = Double.parseDouble(context.getInitParameter("fixedInterest"));
 		int period = Integer.parseInt(context.getInitParameter("period"));
+		int gracePeriod = Integer.parseInt(context.getInitParameter("gracePeriod"));
+		boolean grace = false;
 
 		Enumeration<String> params = request.getParameterNames();
 		while (params.hasMoreElements()) {
 			String param = params.nextElement();
-			if (param.equals("principal")) {
-				String value = request.getParameter("principal");
+			String value = request.getParameter(param);
+
+			if (value.equals("")){
+			} else if (param.equals("principal")) {
 				principal = Double.parseDouble(value);
 			} else if (param.equals("interest")) {
-				interest = Double.parseDouble(request.getParameter("interest"));
+				interest = Double.parseDouble(value);
 			} else if (param.equals("period")) {
-				String value = request.getParameter("period");
 				period = Integer.parseInt(value);
+			} else if (param.equals("grace")) {
+				grace = value.equals("on") ? true : false;
 			}
 		}
 
-		double mnthIntrst = interest / 12;
-		double payment = ( mnthIntrst * principal )/( 1 - Math.pow( 1 + mnthIntrst, -period ));
+		// Calculations
+		double graceInterest = grace ? principal * (( interest/100 + fixedInterest/100 ) / 12 ) * gracePeriod : 0;
+		double mnthIntrst = ( interest / 100 ) / 12;
+		double actualPeriod = grace ? period - gracePeriod : period;
+		double payment = ( mnthIntrst * principal )/( 1 - Math.pow( 1 + mnthIntrst, -actualPeriod ));
+		payment = grace ? payment + ( graceInterest / gracePeriod ) : payment;
 
-		String IPAddress = request.getRemoteAddr();
-		String protocol = request.getProtocol();
-		String method = request.getMethod();
-		String query = request.getQueryString();
-		int port = request.getRemotePort();
-		resOut.write( String.format( "\nPrincipal amount of $%.2f. Interest rate of %.2f. Period of %d months."
-					+ "\nYour monthly payment will be: $%.2f", principal, interest, period, payment )
-				);
+		context.setAttribute("graceInterest", new DecimalFormat("##.00").format(graceInterest));
+		context.setAttribute("payment", new DecimalFormat("##.00").format(payment));
+		request.getRequestDispatcher("/Results.jspx").forward(request, response);
 	}
 
 	/**
