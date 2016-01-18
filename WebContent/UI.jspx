@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+	<jsp:directive.page contentType="text/html; charset=UTF-8"
+		pageEncoding="UTF-8" session="false"/>
+	<jsp:output doctype-root-element="html"
+		doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
+		doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"
+		omit-xml-declaration="true" />
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>${initParam['appName']}</title>
+	<link rel="StyleSheet" href="res/mc.css" type="text/css" title="cse4413" media="screen, print"/>
+</head>
+<body>
+	<form action="" method="GET">
+		<fieldset>
+			<legend>${initParam['appName']}</legend>
+			<table>
+				<tr>
+					<td><label for="principal">Principal<br/>
+						<small>(total loan amount after studies)</small></label></td>
+					<td><input id="principal" name="principal" type="number"></input></td>
+				</tr>
+				<tr>
+					<td><label for="interest">Annual Interest Rate</label></td>
+					<td><input id="interest" name="interest" type="number"></input></td>
+				</tr>
+				<tr>
+					<td><label for="period">Payment Period<br/>
+						<small>(total number of months)</small></label></td>
+					<td><input id="period" name="period" type="number"></input></td>
+				</tr>
+				<tr>
+					<td><label for="grace">Grace Period<br/>
+						<small>(Take advantage of 6 month grace period
+						and include grace period interest with
+						your loan balance)</small></label></td>
+					<td><input id="grace" name="grace" type="checkbox"></input></td>
+				</tr>
+			</table>
+			<input type="submit" name="submit" value="Submit"></input>
+		</fieldset>
+	</form>
+</body>
+</html>
+</jsp:root>
