@@ -19,16 +19,16 @@
 				<tr>
 					<td><label for="principal">Principal<br/>
 						<small>(total loan amount after studies)</small></label></td>
-					<td><input id="principal" name="principal" type="number"></input></td>
+					<td><input id="principal" name="principal" type="number"  step="any"></input></td>
 				</tr>
 				<tr>
 					<td><label for="interest">Annual Interest Rate</label></td>
-					<td><input id="interest" name="interest" type="number"></input></td>
+					<td><input id="interest" name="interest" type="number"  step="any"></input></td>
 				</tr>
 				<tr>
 					<td><label for="period">Payment Period<br/>
 						<small>(total number of months)</small></label></td>
-					<td><input id="period" name="period" type="number"></input></td>
+					<td><input id="period" name="period" type="number" step="any"></input></td>
 				</tr>
 				<tr>
 					<td><label for="grace">Grace Period<br/>
