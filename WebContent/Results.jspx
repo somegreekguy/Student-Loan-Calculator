@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
-	<jsp:directive.page contentType="text/html; charset=UTF-8" 
+<jsp:root 	xmlns:jsp="http://java.sun.com/JSP/Page"
+			xmlns:c="http://java.sun.com/jsp/jstl/core"
+			xmlns:f="http://java.sun.com/jsp/jstl/fmt"
+			version="2.0">
+	<jsp:directive.page contentType="text/html; charset=UTF-8"
 		pageEncoding="UTF-8" session="false"/>
 	<jsp:output doctype-root-element="html"
 		doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
@@ -9,7 +12,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>${appname}</title>
-  <link rel="StyleSheet" href="res/mc.css" type="text/css" title="cse4413" media="screen, print"/>  
+  <link rel="StyleSheet" href="res/mc.css" type="text/css" title="cse4413" media="screen, print"/>
 </head>
 <body>
   <form action="" method="GET">
@@ -18,11 +21,11 @@
       <table>
         <tr>
           <td><label>Grace Period Interest:</label></td>
-          <td><label>$${graceInterest}</label></td>
+          <td><f:formatNumber type="currency" currencySymbol="$">${payment}</f:formatNumber></td>
         </tr>
         <tr>
           <td><label>Monthly payments:</label></td>
-          <td><label>$${payment}</label></td>
+          <td><f:formatNumber type="currency" currencySymbol="$">${payment}</f:formatNumber></td>
         </tr>
         <tr>
           <td colspan="2"><input type="submit" name="restart" value="Restart"/></td>
