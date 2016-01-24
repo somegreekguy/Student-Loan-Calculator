@@ -1,7 +1,6 @@
 package model;
 
 public class Loan {
-	//public static
 
 	public double computePayment(String principalString, String periodString, String interestString, String graceInterestString, String gracePeriodString, String fixedInterestString) throws NumberFormatException, NullPointerException {
 		double principal = Double.parseDouble(principalString);
@@ -20,7 +19,7 @@ public class Loan {
 		if (period <= gracePeriod ) {
 			throw new NumberFormatException("Period must be greater than gracePeriod");
 		}
-		
+
 		double mnthIntrst = (interest/100 + fixedInterest/100) /12;
 		double payment = (mnthIntrst * principal) / (1 - Math.pow(1 + mnthIntrst, -period));
 		return payment + (graceInterest / gracePeriod);

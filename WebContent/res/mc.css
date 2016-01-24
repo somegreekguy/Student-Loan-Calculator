@@ -22,7 +22,6 @@ tr, td {
 }
 label {
 	display: block;
-	margin-top: 16px;
 }
 .radio label, .radio input {
 	display: inline;

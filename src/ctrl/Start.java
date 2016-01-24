@@ -1,9 +1,9 @@
-package servlets;
+package ctrl;
 
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.Enumeration;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,19 +11,26 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import model.Loan;
+
 /**
  * Servlet implementation class Start
  */
 @WebServlet({"/Start","/Startup/*"})
 public class Start extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private Loan model;
 
-		/**
-		* Default constructor.
-		*/
-		public Start() {
-			// TODO Auto-generated constructor stub
-		}
+	/**
+	* Default constructor.
+	*/
+	public Start() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public void init(ServletConfig config) throws ServletException {
+		model = new Loan();
+	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -36,43 +43,49 @@ public class Start extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	// Get Servlet Context that contains parameters
-	ServletContext context = getServletContext();
+		// Get Servlet Context that contains parameters
+		ServletContext context = request.getServletContext();
 
-	double principal = Double.parseDouble(context.getInitParameter("principal"));
-	double interest = Double.parseDouble(context.getInitParameter("interest"));
-	double fixedInterest = Double.parseDouble(context.getInitParameter("fixedInterest"));
-	int period = Integer.parseInt(context.getInitParameter("period"));
-	int gracePeriod = Integer.parseInt(context.getInitParameter("gracePeriod"));
-	boolean grace = false;
+		String principal = context.getInitParameter("principal");
+		String interest = context.getInitParameter("interest");
+		String fixedInterest = context.getInitParameter("fixedInterest");
+		String period = context.getInitParameter("period");
+		String gracePeriod = context.getInitParameter("gracePeriod");
+		String grace = context.getInitParameter("grace");
 
-	Enumeration<String> params = request.getParameterNames();
-	while (params.hasMoreElements()) {
-		String param = params.nextElement();
-		String value = request.getParameter(param);
+		Enumeration<String> params = request.getParameterNames();
+		while (params.hasMoreElements()) {
+			String param = params.nextElement();
+			String value = request.getParameter(param);
 
-		if (value.equals("")){
-		} else if (param.equals("principal")) {
-			principal = Double.parseDouble(value);
-		} else if (param.equals("interest")) {
-			interest = Double.parseDouble(value);
-		} else if (param.equals("period")) {
-			period = Integer.parseInt(value);
-		} else if (param.equals("grace")) {
-			grace = value.equals("on") ? true : false;
+			if (value.equals("")){
+				// Error case? Value is empty
+			} else if (param.equals("principal")) {
+				principal = value;
+			} else if (param.equals("interest")) {
+				interest = value;
+			} else if (param.equals("period")) {
+				period = value;
+			} else if (param.equals("grace")) {
+				grace = value;
+			}
 		}
-	}
 
-	// Calculations
-	double graceInterest = grace ? principal * (( interest/100 + fixedInterest/100 ) / 12 ) * gracePeriod : 0;
-	double mnthIntrst = ( interest / 100 ) / 12;
-	double actualPeriod = grace ? period - gracePeriod : period;
-	double payment = ( mnthIntrst * principal )/( 1 - Math.pow( 1 + mnthIntrst, -actualPeriod ));
-	payment = grace ? payment + ( graceInterest / gracePeriod ) : payment;
+		try {
+			double graceInterest = 0.0;
+			double payment = 0.0;
 
-	context.setAttribute("graceInterest", new DecimalFormat("##.00").format(graceInterest));
-	context.setAttribute("payment", new DecimalFormat("##.00").format(payment));
-	request.getRequestDispatcher("/Results.jspx").forward(request, response);
+			graceInterest = grace.equals("on") ? model.computeGraceInterest(principal, gracePeriod, interest, fixedInterest) : 0.0;
+			payment = model.computePayment(principal, period, interest, String.valueOf(graceInterest), gracePeriod, fixedInterest);
+
+			context.setAttribute("graceInterest", graceInterest);
+			context.setAttribute("payment", payment);
+
+			request.getRequestDispatcher("/Results.jspx").forward(request, response);
+		} catch (Exception e) {
+			request.setAttribute("errorMsg", e.getMessage());
+			request.getRequestDispatcher("/UI.jspx").forward(request, response);
+		}
 	}
 
 }

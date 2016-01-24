@@ -34,6 +34,10 @@
     <param-name>gracePeriod</param-name>
     <param-value>6</param-value>
   </context-param>
+  <context-param>
+  	<param-name>grace</param-name>
+  	<param-value>off</param-value>
+  </context-param>
   <error-page>
     <error-code>404</error-code>
     <location>/res/my404.jsp</location>
