@@ -22,7 +22,15 @@ tr, td {
 }
 label {
 	display: block;
+	margin-top: 16px;
 }
 .radio label, .radio input {
 	display: inline;
+}
+p {
+	text-align:center;
+	font-size:11pt;
+	font-style:normal;
+	font-weight:bold;
+	color:red;
 }
