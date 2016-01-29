@@ -52,6 +52,7 @@ public class Start extends HttpServlet {
 		String period = context.getInitParameter("period");
 		String gracePeriod = context.getInitParameter("gracePeriod");
 		String grace = context.getInitParameter("grace");
+		Boolean userPrincipal = false;
 
 		Enumeration<String> params = request.getParameterNames();
 		while (params.hasMoreElements()) {
@@ -60,6 +61,7 @@ public class Start extends HttpServlet {
 
 			if (param.equals("principal")) {
 				principal = value;
+				userPrincipal = true;
 			} else if (param.equals("interest")) {
 				interest = value;
 			} else if (param.equals("period")) {
@@ -73,9 +75,10 @@ public class Start extends HttpServlet {
 			double graceInterest = grace.equals("on") ? model.computeGraceInterest(principal, gracePeriod, interest, fixedInterest) : 0.0;
 			double payment = model.computePayment(principal, period, interest, String.valueOf(graceInterest), gracePeriod, fixedInterest);
 
-			graceInterest
-			payment
-
+			if (userPrincipal) {
+				request.getSession().setAttribute("principal", principal);
+			}
+			
 			context.setAttribute("graceInterest", graceInterest);
 			context.setAttribute("payment", payment);
 
