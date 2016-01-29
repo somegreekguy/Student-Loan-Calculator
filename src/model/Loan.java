@@ -2,6 +2,9 @@ package model;
 
 public class Loan {
 
+	/*
+	 * Compute monthly payments
+	 */
 	public double computePayment(String principalString, String periodString, String interestString, String graceInterestString, String gracePeriodString, String fixedInterestString) throws NumberFormatException, NullPointerException {
 		double principal = Double.parseDouble(principalString);
 		double period = Double.parseDouble(periodString);
@@ -25,6 +28,9 @@ public class Loan {
 		return payment + (graceInterest / gracePeriod);
 	}
 
+	/*
+	 * Compute Interest accumulated through grace period
+	 */
 	public double computeGraceInterest(String principalString, String gracePeriodString, String interestString, String fixedInterestString) throws NumberFormatException, NullPointerException {
 		double principal = Double.parseDouble(principalString);
 		double gracePeriod = Double.parseDouble(gracePeriodString);

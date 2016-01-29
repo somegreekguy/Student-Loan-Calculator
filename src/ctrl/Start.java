@@ -58,9 +58,7 @@ public class Start extends HttpServlet {
 			String param = params.nextElement();
 			String value = request.getParameter(param);
 
-			if (value.equals("")){
-				// Error case? Value is empty
-			} else if (param.equals("principal")) {
+			if (param.equals("principal")) {
 				principal = value;
 			} else if (param.equals("interest")) {
 				interest = value;
@@ -72,11 +70,11 @@ public class Start extends HttpServlet {
 		}
 
 		try {
-			double graceInterest = 0.0;
-			double payment = 0.0;
+			double graceInterest = grace.equals("on") ? model.computeGraceInterest(principal, gracePeriod, interest, fixedInterest) : 0.0;
+			double payment = model.computePayment(principal, period, interest, String.valueOf(graceInterest), gracePeriod, fixedInterest);
 
-			graceInterest = grace.equals("on") ? model.computeGraceInterest(principal, gracePeriod, interest, fixedInterest) : 0.0;
-			payment = model.computePayment(principal, period, interest, String.valueOf(graceInterest), gracePeriod, fixedInterest);
+			graceInterest
+			payment
 
 			context.setAttribute("graceInterest", graceInterest);
 			context.setAttribute("payment", payment);
