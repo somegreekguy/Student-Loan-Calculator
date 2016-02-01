@@ -15,28 +15,12 @@
 		<param-value>OSAP Calculator</param-value>
 	</context-param>
 	<context-param>
-		<param-name>principal</param-name>
-		<param-value>1000.00</param-value>
-	</context-param>
-	<context-param>
-		<param-name>period</param-name>
-		<param-value>12</param-value>
-	</context-param>
-	<context-param>
-		<param-name>interest</param-name>
-		<param-value>5.00</param-value>
-	</context-param>
-	<context-param>
 		<param-name>fixedInterest</param-name>
 		<param-value>5</param-value>
 	</context-param>
 	<context-param>
 		<param-name>gracePeriod</param-name>
 		<param-value>6</param-value>
-	</context-param>
-	<context-param>
-		<param-name>grace</param-name>
-		<param-value>off</param-value>
 	</context-param>
 	<error-page>
 		<error-code>404</error-code>

@@ -95,13 +95,8 @@ public class Start extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// Get Servlet Context that contains parameters
 		ServletContext context = request.getServletContext();
-
-		String principal = context.getInitParameter("principal");
-		String interest = context.getInitParameter("interest");
 		String fixedInterest = context.getInitParameter("fixedInterest");
-		String period = context.getInitParameter("period");
 		String gracePeriod = context.getInitParameter("gracePeriod");
-		String grace = context.getInitParameter("grace");
 		Boolean userPrincipal = false;
 
 		Enumeration<String> params = request.getParameterNames();
@@ -125,10 +120,7 @@ public class Start extends HttpServlet {
 			double graceInterest = grace.equals("on") ? model.computeGraceInterest(principal, gracePeriod, interest, fixedInterest) : 0.0;
 			double payment = model.computePayment(principal, period, interest, String.valueOf(graceInterest), gracePeriod, fixedInterest);
 
-			if (userPrincipal) {
-				request.getSession().setAttribute("principal", principal);
-			}
-
+			request.getSession().setAttribute("principal", principal);
 			context.setAttribute("graceInterest", graceInterest);
 			context.setAttribute("payment", payment);
 
