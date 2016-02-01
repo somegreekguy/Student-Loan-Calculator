@@ -1,6 +1,7 @@
 package ctrl;
 
 import java.io.IOException;
+import java.io.Writer;
 import java.util.Enumeration;
 
 import javax.servlet.ServletConfig;
@@ -36,7 +37,56 @@ public class Start extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.getRequestDispatcher("/UI.jspx").forward(request, response);
+		if (request.getQueryString() ==  null || request.getParameter("restart") != null) {
+			request.getRequestDispatcher("/UI.jspx").forward(request, response);
+			return;
+		}
+
+		// Get Servlet Context that contains parameters
+		ServletContext context = request.getServletContext();
+
+		String principal = context.getInitParameter("principal");
+		String interest = context.getInitParameter("interest");
+		String fixedInterest = context.getInitParameter("fixedInterest");
+		String period = context.getInitParameter("period");
+		String gracePeriod = context.getInitParameter("gracePeriod");
+		String grace = context.getInitParameter("grace");
+		Boolean userPrincipal = false;
+
+		Enumeration<String> params = request.getParameterNames();
+		while (params.hasMoreElements()) {
+			String param = params.nextElement();
+			String value = request.getParameter(param);
+
+			if (param.equals("principal")) {
+				principal = value;
+				userPrincipal = true;
+			} else if (param.equals("interest")) {
+				interest = value;
+			} else if (param.equals("period")) {
+				period = value;
+			} else if (param.equals("grace")) {
+				grace = value;
+			}
+		}
+
+		try {
+			double graceInterest = grace.equals("on") ? model.computeGraceInterest(principal, gracePeriod, interest, fixedInterest) : 0.0;
+			double payment = model.computePayment(principal, period, interest, String.valueOf(graceInterest), gracePeriod, fixedInterest);
+
+			if (userPrincipal) {
+				request.getSession().setAttribute("principal", principal);
+			}
+
+			Writer out = response.getWriter();
+			response.flushBuffer();
+
+			out.append("{ \"graceInterest\" : " + graceInterest + ", \"payment\" : " + payment + " }");
+		} catch (Exception e) {
+			System.out.println("Error'd Out.");
+			request.setAttribute("errorMsg", e.getMessage());
+			request.getRequestDispatcher("/UI.jspx").forward(request, response);
+		}
 	}
 
 	/**
@@ -78,7 +128,7 @@ public class Start extends HttpServlet {
 			if (userPrincipal) {
 				request.getSession().setAttribute("principal", principal);
 			}
-			
+
 			context.setAttribute("graceInterest", graceInterest);
 			context.setAttribute("payment", payment);
 
