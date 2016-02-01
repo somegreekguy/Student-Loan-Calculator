@@ -38,16 +38,17 @@ function doSimpleAjax(address){
 		return;
 	}
 	var request = new XMLHttpRequest();
-	var data = '';
-
-	data += "principal=" + document.getElementById("principal").value
+	var data = "principal=" + document.getElementById("principal").value
 		+ "&interest=" + document.getElementById("interest").value
 		+ "&period=" + document.getElementById("period").value
-		+ "&grace=" + (document.getElementById("grace").checked ? "on" : "off");
+		+ "&grace=" + (document.getElementById("grace").checked ? "on" : "off")
+		+ "&ajax=true";
 
-	request.open("GET", (address + "?" + data), true);
+	request.open("POST", address, true);
+	request.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+	request.setRequestHeader("Accpet","application/json");
 	request.onreadystatechange = function() { handler(request); };
-	request.send(null);
+	request.send(data);
 }
 
 function handler(request){
