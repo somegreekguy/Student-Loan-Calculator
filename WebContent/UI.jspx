@@ -8,14 +8,24 @@
 		omit-xml-declaration="true" />
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<title>${initParam['appName']}</title>
+	<c:if test="${empty sessionScope['category']}">
+		<title>${initParam['appName']}</title>
+	</c:if>
+	<c:if test="${not empty sessionScope['category']}">
+		<title>${initParam['appName']} [${sessionScope['category']}]</title>
+	</c:if>
 	<link rel="StyleSheet" href="${pageContext.request.contextPath}/res/mc.css" type="text/css" title="cse4413" media="screen, print"/>
 	<script type="text/javascript" src="${pageContext.request.contextPath}/res/mc.js">;</script>
 </head>
 <body>
 	<form action="" method="POST" onsubmit="return validate();">
 		<fieldset>
-			<legend>${initParam['appName']}</legend>
+			<c:if test="${empty sessionScope['category']}">
+				<legend>${initParam['appName']}</legend>
+			</c:if>
+			<c:if test="${not empty sessionScope['category']}">
+				<legend>${initParam['appName']} [${sessionScope['category']}]</legend>
+			</c:if>
 			<c:if test="${not empty requestScope['errorMsg']}">
 				<p>${requestScope['errorMsg']}</p>
 			</c:if>
@@ -26,38 +36,63 @@
 					<td><input id="principal" name="principal" type="number" step="any" value="${param['principal']}"></input></td>
 					<td><p id="principalError"></p></td>
 				</tr>
+				<c:if test="${not empty category}">
 				<tr>
-					<td><label for="interest">Annual Interest Rate</label></td>
-					<td><input id="interest" name="interest" type="number" step="any" value="${param['interest']}"></input></td>
+					<td><label for="interest">Annual Interest Rate<br/><small>(per year)</small></label></td>
+					<td>
+						<span>
+							<input class="radio" id="interest1" name="interest" type="radio" value="4.5"></input>
+							<label for="interest1" class="radio">4.5</label>
+						</span>
+						<span>
+							<input class="radio" id="interest2" name="interest" type="radio" value="5.5"></input>
+							<label for="interest2" class="radio">5.5</label>
+						</span>
+						<span>
+							<input class="radio" id="interest3" name="interest" type="radio" value="6.5"></input>
+							<label for="interest3" class="radio">6.5</label>
+						</span>
+					</td>
 					<td><p id="interestError"></p></td>
 				</tr>
 				<tr>
-					<td><label for="period">Payment Period<br/>
-						<small>(total number of months)</small></label></td>
-					<td><input id="period" name="period" type="number" step="any" value="${param['period']}"></input></td>
-					<td><p id="periodError"></p></td>
-				</tr>
-				<tr>
-					<td><label for="grace">Grace Period<br/>
-						<small>(Take advantage of 6 month grace period
-						and include grace period interest with
-						your loan balance)</small></label></td>
-					<c:choose>
-						<c:when test="${param['grace'] eq 'on'}">
-							<td><input id="grace" name="grace" type="checkbox" checked="checked"></input></td>
-						</c:when>
-						<c:otherwise>
-							<td><input id="grace" name="grace" type="checkbox"></input></td>
-						</c:otherwise>
-					</c:choose>
-				</tr>
-				<tr id="ajaxResponse">
-					<td colspan="2"><label id="ajaxTarget"></label></td>
-				</tr>
-				<tr>
 					<td><input type="submit" name="submit" value="Submit"></input></td>
-					<td><button name="ajax" value="true" onclick="doSimpleAjax('${pageContext.request.contextPath}/Start');return false;">Submit (Ajax)</button></td>
 				</tr>
+				</c:if>
+				<c:if test="${empty category}">
+					<tr>
+						<td><label for="interest">Annual Interest Rate</label></td>
+						<td><input id="interest" name="interest" type="number" step="any" value="${param['interest']}"></input></td>
+						<td><p id="interestError"></p></td>
+					</tr>
+					<tr>
+						<td><label for="period">Payment Period<br/>
+							<small>(total number of months)</small></label></td>
+						<td><input id="period" name="period" type="number" step="any" value="${param['period']}"></input></td>
+						<td><p id="periodError"></p></td>
+					</tr>
+					<tr>
+						<td><label for="grace">Grace Period<br/>
+							<small>(Take advantage of 6 month grace period
+							and include grace period interest with
+							your loan balance)</small></label></td>
+						<c:choose>
+							<c:when test="${param['grace'] eq 'on'}">
+								<td><input id="grace" name="grace" type="checkbox" checked="checked"></input></td>
+							</c:when>
+							<c:otherwise>
+								<td><input id="grace" name="grace" type="checkbox"></input></td>
+							</c:otherwise>
+						</c:choose>
+					</tr>
+					<tr id="ajaxResponse">
+						<td colspan="2"><label id="ajaxTarget"></label></td>
+					</tr>
+					<tr>
+						<td><input type="submit" name="submit" value="Submit"></input></td>
+						<td><button name="ajax" value="true" onclick="doSimpleAjax('${pageContext.request.contextPath}/Start');return false;">Submit (Ajax)</button></td>
+					</tr>
+				</c:if>
 			</table>
 		</fieldset>
 	</form>

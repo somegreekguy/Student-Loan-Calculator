@@ -3,6 +3,7 @@ package ctrl;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Enumeration;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -17,7 +18,7 @@ import model.Loan;
 /**
  * Servlet implementation class Start
  */
-@WebServlet({"/Start","/Startup/*"})
+@WebServlet({"/Start","/Start/*","/Startup/*"})
 public class Start extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private Loan model;
@@ -37,6 +38,15 @@ public class Start extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String path = request.getPathInfo();
+		if (request.getServletPath().equals("/Start") && path != null && Pattern.matches("/Fixed[A-Z]", path)) {
+			String letter = path.substring(path.length() - 1);
+			request.getSession().setAttribute("category", letter);
+			request.setAttribute("category", true);
+		} else {
+			request.getSession().setAttribute("category", null);
+		}
+
 		request.getRequestDispatcher("/UI.jspx").forward(request, response);
 	}
 
@@ -64,6 +74,20 @@ public class Start extends HttpServlet {
 			} else if (param.equals("grace")) {
 				grace = value;
 			}
+		}
+
+		if (request.getSession().getAttribute("category") != null) {
+			String temp = request.getSession().getAttribute("category").toString();
+
+			if (Pattern.matches("[A-F]", temp)) { period = "120"; }
+			else if (Pattern.matches("[G-K]", temp)) { period = "180"; }
+			else if (Pattern.matches("[L-O]", temp)) { period = "240"; }
+			else if (Pattern.matches("[P-Z]", temp)) { period = "360"; }
+
+			request.setAttribute("period", Integer.parseInt(period)/12);
+			request.setAttribute("interest", interest);
+			request.setAttribute("category", true);
+			grace = "off";
 		}
 
 		try {

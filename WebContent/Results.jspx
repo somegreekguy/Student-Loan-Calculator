@@ -11,25 +11,47 @@
 		omit-xml-declaration="true" />
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<title>${initParam['appName']}</title>
+	<c:if test="${empty sessionScope['category']}">
+		<title>${initParam['appName']}</title>
+	</c:if>
+	<c:if test="${not empty sessionScope['category']}">
+		<title>${initParam['appName']} [${sessionScope['category']}]</title>
+	</c:if>
 	<link rel="StyleSheet" href="${pageContext.request.contextPath}/res/mc.css" type="text/css" title="cse4413" media="screen, print"/>
 </head>
 <body>
 	<form action="" method="GET">
 		<fieldset>
-			<legend>${initParam['appName']}</legend>
+			<c:if test="${empty sessionScope['category']}">
+				<legend>${initParam['appName']}</legend>
+			</c:if>
+			<c:if test="${not empty sessionScope['category']}">
+				<legend>${initParam['appName']} [${sessionScope['category']}]</legend>
+			</c:if>
 			<table>
-				<tr>
-					<td><label>Grace Period Interest:</label></td>
-					<td><label><f:formatNumber type="currency" currencySymbol="$">${graceInterest}</f:formatNumber></label></td>
-				</tr>
+				<c:if test="${empty category}">
+					<tr>
+						<td><label>Grace Period Interest:</label></td>
+						<td><label><f:formatNumber type="currency" currencySymbol="$">${graceInterest}</f:formatNumber></label></td>
+					</tr>
+				</c:if>
 				<tr>
 					<td><label>Monthly payments:</label></td>
 					<td><label><f:formatNumber type="currency" currencySymbol="$">${payment}</f:formatNumber></label></td>
 				</tr>
-				<tr>
-					<td colspan="2"><input type="submit" name="restart" value="Restart"/></td>
-				</tr>
+				<c:if test="${empty category}">
+					<tr>
+						<td colspan="2"><input type="submit" name="restart" value="Restart"/></td>
+					</tr>
+				</c:if>
+				<c:if test="${not empty category}">
+					<tr>
+						<td><small>Calculations are based on a fixed period of ${period} years an interest rate of ${interest}% per year.</small></td>
+					</tr>
+					<tr>
+						<td colspan="2"><input type="submit" name="restart" value="Start Over"/></td>
+					</tr>
+				</c:if>
 			</table>
 		</fieldset>
 	</form>
