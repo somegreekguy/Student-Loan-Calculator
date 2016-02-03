@@ -68,7 +68,8 @@ public class Start extends HttpServlet {
 
 		try {
 			double graceInterest = grace.equals("on") ? model.computeGraceInterest(principal, gracePeriod, interest, fixedInterest) : 0.0;
-			double payment = model.computePayment(principal, period, interest, String.valueOf(graceInterest), gracePeriod, fixedInterest);
+			double payment = model.computePayment(principal, period, interest, String.valueOf(graceInterest),
+					(grace.equals("on") ? gracePeriod : "-1"), fixedInterest);
 
 			request.getSession().setAttribute("principal", principal);
 			context.setAttribute("graceInterest", graceInterest);

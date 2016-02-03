@@ -13,19 +13,19 @@ public class Loan {
 		double gracePeriod = Double.parseDouble(gracePeriodString);
 		double fixedInterest = Double.parseDouble(fixedInterestString);
 
-		if (principal < 0 || period < 0 || interest < 0 || graceInterest < 0 || gracePeriod < 0 || fixedInterest < 0) {
+		if (principal < 0 || period < 0 || interest < 0 || graceInterest < 0 || fixedInterest < 0) {
 			throw new NumberFormatException("Number cannot be negative.");
 		}
 		if (interest > 99 || interest < 1) {
 			throw new NumberFormatException("Interest must be [0,100]");
 		}
-		if (period <= gracePeriod ) {
+		if (gracePeriod > 0 && period <= gracePeriod ) {
 			throw new NumberFormatException("Period must be greater than gracePeriod");
 		}
 
 		double mnthIntrst = (interest/100 + fixedInterest/100) /12;
 		double payment = (mnthIntrst * principal) / (1 - Math.pow(1 + mnthIntrst, -period));
-		return payment + (graceInterest / gracePeriod);
+		return payment + (gracePeriod > 0 ? (graceInterest / gracePeriod) : 0);
 	}
 
 	/*

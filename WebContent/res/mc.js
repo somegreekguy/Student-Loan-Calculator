@@ -25,7 +25,7 @@ function validate() {
 	if (period == null || isNaN(period) || period < 1) {
 		periodError.innerHTML = "Invalid Period!";
 		ok = false;
-	} else if (grace != null && grace && period < 7) {
+	} else if (grace && period < 7) {
 		periodError.innerHTML = "Invalid Period. Must be greater than grace period.";
 		ok = false;
 	}
