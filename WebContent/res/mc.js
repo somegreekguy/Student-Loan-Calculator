@@ -57,7 +57,7 @@ function doSimpleAjax(address){
 
 	request.open("POST", address, true);
 	request.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
-	request.setRequestHeader("Accpet","application/json");
+	request.setRequestHeader("Accept","application/json");
 	request.onreadystatechange = function() { handler(request); };
 	request.send(data);
 }
